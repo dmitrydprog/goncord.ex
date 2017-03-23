@@ -32,4 +32,15 @@ defmodule Goncord.UserController do
         |> render(Goncord.ChangesetView, "error.json", changeset: changeset)
     end
   end
+
+  def change_password(conn, %{"old_password" => old, "new_password" => new}) do
+    user = Guardian.Plug.current_resource(conn)
+    case User.change_password(user, old, new) do
+      true -> send_resp(conn, :ok, "")
+      _ -> conn
+           |> put_status(:unprocessable_entity)
+           |> put_view(Goncord.TokenView)
+           |> render("error.json", message: "Не удалось поменять пароль")
+    end
+  end
 end
