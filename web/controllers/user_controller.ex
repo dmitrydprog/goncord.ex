@@ -3,7 +3,7 @@ defmodule Goncord.UserController do
 
   alias Goncord.User
 
-  def create(conn, %{"user" => user_params}) do
+  def create(conn, user_params) do
     changeset = User.changeset(%User{}, user_params)
 
     case Repo.insert(changeset) do
@@ -19,14 +19,9 @@ defmodule Goncord.UserController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
-    render(conn, "show.json", user: user)
-  end
-
-  def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Repo.get!(User, id)
-    changeset = User.changeset(user, user_params)
+  def update(conn, user_params) do
+    user = Guardian.Plug.current_resource(conn)
+    changeset = User.update(user, user_params)
 
     case Repo.update(changeset) do
       {:ok, user} ->
