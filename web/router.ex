@@ -39,7 +39,7 @@ defmodule Goncord.Router do
       delete "/tokens", TokenController, :delete
       get "/tokens/validate", TokenController, :validate
 
-      resources "/users", UserController, only: [:show, :update]
+      patch "/users", UserController, :update
     end
   end
 end
