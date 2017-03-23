@@ -10,4 +10,11 @@ defmodule Goncord.Role do
 
     timestamps()
   end
+
+  def changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:name])
+    |> unique_constraint(:name)
+    |> validate_required([:name])
+  end
 end
