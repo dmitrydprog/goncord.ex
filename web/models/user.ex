@@ -21,13 +21,18 @@ defmodule Goncord.User do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:login, :password, :hashed_password, :email, :first_name, :last_name, :second_name, :birthday])
-    |> unique_constraint(:login)
-    |> unique_constraint(:email)
+    |> custom_unique_fields()
     |> validate_required([:login, :password, :email])
-    |> validate_length(:password, min: 6)
-    |> validate_length(:login, min: 3)
-    |> validate_format(:email, ~r/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b/i)
+    |> custom_validate_fields()
     |> hash_password()
+  end
+
+
+  def update(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:first_name, :last_name, :second_name, :birthday])
+    |> custom_unique_fields()
+    |> custom_validate_fields()
   end
 
   def check_hashed_password(user, password) do
@@ -35,6 +40,19 @@ defmodule Goncord.User do
       nil -> false
       _   -> Comeonin.Bcrypt.checkpw(password, user.hashed_password)
     end
+  end
+
+  defp custom_validate_fields(struct) do
+    struct
+    |> validate_length(:password, min: 6)
+    |> validate_length(:login, min: 3)
+    |> validate_format(:email, ~r/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b/i)
+  end
+
+  defp custom_unique_fields(struct) do
+    struct
+    |> unique_constraint(:login)
+    |> unique_constraint(:email)
   end
 
   defp hash_password(changeset) do
