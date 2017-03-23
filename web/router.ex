@@ -40,6 +40,7 @@ defmodule Goncord.Router do
       get "/tokens/validate", TokenController, :validate
 
       patch "/users", UserController, :update
+      post "/users/change_password", UserController, :change_password
     end
   end
 end
