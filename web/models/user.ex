@@ -27,7 +27,6 @@ defmodule Goncord.User do
     |> hash_password()
   end
 
-
   def update(struct, params \\ %{}) do
     struct
     |> cast(params, [:first_name, :last_name, :second_name, :birthday])
@@ -39,6 +38,20 @@ defmodule Goncord.User do
     case user do
       nil -> false
       _   -> Comeonin.Bcrypt.checkpw(password, user.hashed_password)
+    end
+  end
+
+  def change_password(user, old_password, new_password) do
+    case check_hashed_password(user, old_password) do
+      true ->
+        changeset = changeset(user, %{password: new_password})
+        changeset = hash_password(changeset)
+        case Goncord.Repo.update(changeset) do
+          {:ok, _} -> true
+          _ -> false
+        end
+
+      _ -> false
     end
   end
 
