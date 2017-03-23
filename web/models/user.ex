@@ -10,6 +10,8 @@ defmodule Goncord.User do
     field :second_name, :string
     field :birthday, Ecto.Date
 
+    many_to_many :roles, Goncord.Role, join_through: "users_roles", on_delete: :delete_all
+
     field :password, :string, virtual: true
 
     timestamps()
@@ -47,7 +49,7 @@ defmodule Goncord.User do
         changeset = changeset(user, %{password: new_password})
         changeset = hash_password(changeset)
         case Goncord.Repo.update(changeset) do
-          {:ok, _} -> true
+          {:ok, user} -> true
           _ -> false
         end
 
