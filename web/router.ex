@@ -16,7 +16,7 @@ defmodule Goncord.Router do
   end
 
   pipeline :api_auth do
-    plug Guardian.Plug.EnsureAuthenticated, handler: Goncord.HttpErrorHandler
+    plug Guardian.Plug.EnsureAuthenticated, handler: Goncord.TokenController
   end
 
   scope "/", Goncord do
@@ -36,12 +36,10 @@ defmodule Goncord.Router do
     scope "/v0" do
       pipe_through(:api_auth)
 
+      delete "/tokens", TokenController, :delete
+      get "/tokens/validate", TokenController, :validate
+
       resources "/users", UserController, only: [:show, :update]
     end
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", Goncord do
-  #   pipe_through :api
-  # end
 end
