@@ -22,7 +22,9 @@ defmodule Goncord.User do
   """
   def changeset(struct, params \\ %{}) do
     struct
+    |> Goncord.Repo.preload(:roles)
     |> cast(params, [:login, :password, :hashed_password, :email, :first_name, :last_name, :second_name, :birthday])
+    |> cast_assoc(:roles)
     |> custom_unique_fields()
     |> validate_required([:login, :password, :email])
     |> custom_validate_fields()
@@ -49,7 +51,7 @@ defmodule Goncord.User do
         changeset = changeset(user, %{password: new_password})
         changeset = hash_password(changeset)
         case Goncord.Repo.update(changeset) do
-          {:ok, user} -> true
+          {:ok, _} -> true
           _ -> false
         end
 
