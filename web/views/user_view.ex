@@ -15,6 +15,7 @@ defmodule Goncord.UserView do
       first_name: user.first_name,
       last_name: user.last_name,
       second_name: user.second_name,
-      birthday: user.birthday}
+      birthday: user.birthday,
+      roles: Goncord.RoleView.render("index.json", %{roles: user.roles})}
   end
 end
