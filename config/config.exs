@@ -26,7 +26,8 @@ config :guardian, Guardian,
   issuer: "Goncord",
   secret_key: "LCJaAHj7bDOi66eBzBEPafhzgXJsdaiF9o6HeVHCjlYJNXJz5Z0X757DqQjkWGl8",
   serializer: Goncord.GuardianSerializer,
-  hooks: GuardianDb
+  hooks: GuardianDb,
+  ttl: { 14, :days }
 
 config :guardian_db, GuardianDb,
    repo: Goncord.Repo
