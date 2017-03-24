@@ -6,6 +6,7 @@ defmodule Goncord.GuardianSerializer do
   alias Goncord.User
 
   def for_token(user = %User{}), do: { :ok, "User:#{user.id}" }
+
   def for_token(_), do: { :error, "Неизвестный ресурс" }
 
   def from_token("User:" <> id) do
