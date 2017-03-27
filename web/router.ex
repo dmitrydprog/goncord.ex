@@ -41,6 +41,8 @@ defmodule Goncord.Router do
 
       patch "/users", UserController, :update
       post "/users/change_password", UserController, :change_password
+
+      get "/menu", MenuController, :get_menu
     end
   end
 end
