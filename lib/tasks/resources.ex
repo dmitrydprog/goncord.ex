@@ -8,20 +8,22 @@ defmodule Mix.Tasks.AddResource do
     add_resource(blob_resource)
   end
 
-  defp add_resource(["super", url]) do
-    add_resource(%{is_super: true, url: url})
+  defp add_resource(["super", url, name | roles]) do
+    add_resource(%{is_super: true, name: name, url: url}, roles)
   end
 
-  defp add_resource([url]) do
-    add_resource(%{is_super: false, url: url})
+  defp add_resource([url, name | roles]) do
+    IO.inspect(name)
+    add_resource(%{is_super: false, name: name, url: url}, roles)
   end
 
-  defp add_resource(params) do
-    uuid = Resource.generate_uuid()
-    params = Dict.put(params, :token, uuid)
+  defp add_resource(params, roles) do
+    roles = Enum.map roles, fn name ->
+      Role.get_or_create(%{name: name})
+    end
 
-    changeset = Resource.changeset(%Resource{}, params)
-    resource = Repo.insert!(changeset)
+    resource = Resource.get_or_create(params)
+    Resource.set_roles(resource, roles)
 
     case resource.is_super do
       true ->
