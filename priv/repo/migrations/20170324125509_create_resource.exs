@@ -6,6 +6,7 @@ defmodule Goncord.Repo.Migrations.CreateResource do
       add :token, :uuid
       add :is_super, :boolean, default: false, null: false
       add :url, :string
+      add :name, :string
 
       timestamps()
     end
