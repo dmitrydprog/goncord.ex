@@ -19,6 +19,9 @@ defmodule Goncord.TokenController do
       true ->
         case Guardian.encode_and_sign(user, :token, %{}) do
           {:ok, jwt, _full_claims} ->
+            user = user
+            |> Goncord.Repo.preload(:roles)
+
             conn
             |> put_status(:created)
             |> render("show.json", jwt: jwt, user: user)
