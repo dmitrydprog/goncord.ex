@@ -31,4 +31,12 @@ defmodule Goncord.Role do
 
     Repo.one(query) || create(params)
   end
+
+  def set_roles(model, roles) do
+    model
+    |> Goncord.Repo.preload(:roles)
+    |> Ecto.Changeset.change()
+    |> Ecto.Changeset.put_assoc(:roles, roles)
+    |> Goncord.Repo.update!
+  end
 end
