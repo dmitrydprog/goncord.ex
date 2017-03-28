@@ -10,7 +10,9 @@ defmodule Goncord.GuardianSerializer do
   def for_token(_), do: { :error, "Неизвестный ресурс" }
 
   def from_token("User:" <> id) do
-    user = Repo.get(User, id) |> Repo.preload(:roles)
+    user = Repo.get(User, id)
+        |> Repo.preload(:roles)
+        |> Repo.preload(:resources)
 
     {:ok, user}
   end
