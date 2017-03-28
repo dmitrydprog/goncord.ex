@@ -8,6 +8,7 @@ defmodule Goncord.Resource do
     field :name, :string
 
     many_to_many :roles, Goncord.Role, join_through: "roles_resources", on_delete: :delete_all, on_replace: :delete
+    many_to_many :resources, Goncord.User, join_through: Goncord.UserResource, on_delete: :delete_all
 
     timestamps()
   end

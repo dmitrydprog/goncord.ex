@@ -11,6 +11,7 @@ defmodule Goncord.User do
     field :birthday, Ecto.Date
 
     many_to_many :roles, Goncord.Role, join_through: "users_roles", on_delete: :delete_all
+    many_to_many :resources, Goncord.Resource, join_through: Goncord.UserResource, on_delete: :delete_all
 
     field :password, :string, virtual: true
 
