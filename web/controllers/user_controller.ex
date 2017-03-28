@@ -20,6 +20,11 @@ defmodule Goncord.UserController do
 
   def update(conn, user_params) do
     user = Guardian.Plug.current_resource(conn)
+    {roles, user_params} = Access.pop(user_params, "roles")
+    roles = Enum.map(roles, &%{name: &1["name"]})
+            |> Enum.map(&Goncord.Role.get_or_create(&1))
+
+    user = Goncord.Role.set_roles(user, roles)
     changeset = User.update(user, user_params)
 
     case Repo.update(changeset) do
