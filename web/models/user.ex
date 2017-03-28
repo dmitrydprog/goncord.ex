@@ -1,5 +1,6 @@
 defmodule Goncord.User do
   use Goncord.Web, :model
+  import Ecto.Query
 
   schema "users" do
     field :login, :string
@@ -10,7 +11,7 @@ defmodule Goncord.User do
     field :second_name, :string
     field :birthday, Ecto.Date
 
-    many_to_many :roles, Goncord.Role, join_through: "users_roles", on_delete: :delete_all
+    many_to_many :roles, Goncord.Role, join_through: "users_roles", on_delete: :delete_all, on_replace: :delete
     many_to_many :resources, Goncord.Resource, join_through: Goncord.UserResource, on_delete: :delete_all
 
     field :password, :string, virtual: true
@@ -24,8 +25,10 @@ defmodule Goncord.User do
   def changeset(struct, params \\ %{}) do
     struct
     |> Goncord.Repo.preload(:roles)
+    |> Goncord.Repo.preload(:resources)
     |> cast(params, [:login, :password, :hashed_password, :email, :first_name, :last_name, :second_name, :birthday])
     |> cast_assoc(:roles)
+    |> cast_assoc(:resources)
     |> custom_unique_fields()
     |> validate_required([:login, :password, :email])
     |> custom_validate_fields()
@@ -57,6 +60,28 @@ defmodule Goncord.User do
         end
 
       _ -> false
+    end
+  end
+
+  def get_all_related_resource(user) do
+    user |> Goncord.Repo.preload(:resources)
+    user.resources
+  end
+
+  def get_all_related_roles(user) do
+    user |> Goncord.Repo.preload(:roles)
+    user.roles
+  end
+
+  def get_payloads(user) do
+    user_resources = from ur in Goncord.UserResource,
+                     join: r in Goncord.Resource, on: [id: ur.resource_id],
+                     where: ur.user_id == ^user.id,
+                     select: {r.url, ur.payload}
+
+    user_resources = Goncord.Repo.all user_resources
+    Enum.reduce user_resources, %{}, fn {url, payload}, acc ->
+      Map.put(acc, url, payload)
     end
   end
 
