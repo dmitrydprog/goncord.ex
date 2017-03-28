@@ -1,7 +1,5 @@
 defmodule Goncord.Plug.JwtCookie do
-  def init(opts) do
-    opts
-  end
+  def init(opts), do: opts
 
   def call(conn, _opts) do
     conn = Plug.Conn.fetch_cookies(conn)
