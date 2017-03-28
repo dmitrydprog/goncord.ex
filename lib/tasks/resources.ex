@@ -13,7 +13,6 @@ defmodule Mix.Tasks.AddResource do
   end
 
   defp add_resource([url, name | roles]) do
-    IO.inspect(name)
     add_resource(%{is_super: false, name: name, url: url}, roles)
   end
 
@@ -23,7 +22,7 @@ defmodule Mix.Tasks.AddResource do
     end
 
     resource = Resource.get_or_create(params)
-    Resource.set_roles(resource, roles)
+    Goncord.Role.set_roles(resource, roles)
 
     case resource.is_super do
       true ->
