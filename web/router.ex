@@ -10,6 +10,7 @@ defmodule Goncord.Router do
   end
 
   pipeline :api do
+    plug Goncord.Plug.ResourceToken
     plug Goncord.Plug.JwtCookie
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
@@ -18,12 +19,6 @@ defmodule Goncord.Router do
 
   pipeline :api_auth do
     plug Guardian.Plug.EnsureAuthenticated, handler: Goncord.TokenController
-  end
-
-  scope "/", Goncord do
-    pipe_through(:browser)
-
-    get "/", PageController, :index
   end
 
   scope "/api", Goncord do
