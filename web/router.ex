@@ -10,6 +10,7 @@ defmodule Goncord.Router do
   end
 
   pipeline :api do
+    plug Goncord.Plug.JwtCookie
     plug Guardian.Plug.VerifyHeader, realm: "Bearer"
     plug Guardian.Plug.LoadResource
     plug :accepts, ["json"]

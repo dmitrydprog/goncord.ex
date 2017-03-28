@@ -57,6 +57,7 @@ defmodule Goncord.TokenController do
 
   def validate(conn, _params) do
     user = Guardian.Plug.current_resource(conn)
+
     conn
     |> put_status(:ok)
     |> put_view(Goncord.UserView)
