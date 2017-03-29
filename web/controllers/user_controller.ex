@@ -22,37 +22,59 @@ defmodule Goncord.UserController do
     # TODO: Update resource payloads
 
     user = Guardian.Plug.current_resource(conn)
-
     resource = conn.assigns[:resource]
 
-    {user, user_params} =
-      case resource do
-        nil -> {user, user_params}
+    if (not is_nil(user)) and (not is_nil(resource)) do
+      if resource.is_super do
+        {user, user_params} = user |> extract_roles(user_params) |> extract_apps()
+        changeset = User.update(user, user_params)
 
-        resource ->
-          case resource.is_super do
-            true -> user |> extract_roles(user_params) |> extract_apps()
-            _ -> {user, user_params}
-          end
+        case Repo.update(changeset) do
+          {:ok, user} ->
+            render(conn, "show.json", user: user)
+          {:error, changeset} ->
+            conn
+            |> put_status(:unprocessable_entity)
+            |> render(Goncord.ChangesetView, "error.json", changeset: changeset)
+        end
       end
-
-    changeset = User.update(user, user_params)
-
-    case Repo.update(changeset) do
-      {:ok, user} ->
-        render(conn, "show.json", user: user)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Goncord.ChangesetView, "error.json", changeset: changeset)
+    else
+      conn
+      |> put_status(:not_found)
+      |> put_view(Goncord.TokenView)
+      |> render("error.json", message: "Пользователь или ресурс не существуют.")
     end
+
+
+#    case resource do
+#      nil -> {user, user_params}
+#
+#      resource ->
+#        case resource.is_super do
+#          true ->
+#            {user, user_params} = user |> extract_roles(user_params) |> extract_apps()
+#            changeset = User.update(user, user_params)
+#
+#            case Repo.update(changeset) do
+#              {:ok, user} ->
+#                render(conn, "show.json", user: user)
+#              {:error, changeset} ->
+#                conn
+#                |> put_status(:unprocessable_entity)
+#                |> render(Goncord.ChangesetView, "error.json", changeset: changeset)
+#            end
+#          _ -> {user, user_params}
+#        end
+#    end
   end
 
   defp extract_apps({user, params}) do
     {apps, user_params} = Access.pop(params, "apps")
     Enum.each(apps, fn({k, v}) ->
-      resource = Goncord.Repo.get_by(Goncord.Resource, url: k)
-      Goncord.UserResource.update_payload(user, resource, v)
+      case Goncord.Repo.get_by(Goncord.Resource, url: k) do
+        nil -> nil
+        resource -> Goncord.UserResource.update_payload(user, resource, v)
+      end
     end)
 
     {user, user_params}
