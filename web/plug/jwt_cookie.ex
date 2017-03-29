@@ -6,8 +6,8 @@ defmodule Goncord.Plug.JwtCookie do
     jwt_cookie = conn.cookies["jwt"]
 
     case Plug.Conn.get_req_header(conn, "authorization") do
-      [] -> conn
-      _  -> Plug.Conn.put_req_header(conn, "authorization", "Bearer #{jwt_cookie}")
+      [] -> Plug.Conn.put_req_header(conn, "authorization", "Bearer #{jwt_cookie}")
+      _  -> conn
     end
   end
 end
