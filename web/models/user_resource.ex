@@ -40,19 +40,4 @@ defmodule Goncord.UserResource do
         Goncord.Repo.update!(changeset)
     end
   end
-
-#  def update_payload(user_id, resource_id, payload)
-#    when is_number(user_id) and is_number(resource_id) do
-#
-#    IO.inspect("---------------------------------")
-#    IO.inspect(user_id)
-#    IO.inspect("---------------------------------")
-#    IO.inspect(resource_id)
-#    IO.inspect("---------------------------------")
-#
-#    params = %{user: user_id, resource: resource_id, payload: payload}
-#
-#    changeset = changeset(%Goncord.UserResource{}, params)
-#    Goncord.Repo.update!(changeset)
-#  end
 end
