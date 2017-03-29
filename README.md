@@ -3,8 +3,11 @@
 ## Оглавление
 * [Регистрация](#register)
 * [Авторизация](#auth)
+* [Выход](#logout)
 * [Валидация](#validate)
 * [Обновление](#update)
+* [Смена пароля](#change_password)
+* [Меню](#menu)
 
 ## Правила поиска токена
 Проверяется заголовок `Authorization` запроса:
@@ -278,4 +281,81 @@ Cache-Control: no-cache
     }
   }
 }
+```
+
+---
+
+<a name="logout"></a>
+## Выход
+
+Ссылка: `api/v0/tokens`
+
+Метод: `delete`
+
+Пример запроса:
+```json
+DELETE /api/v0/tokens HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjQiLCJleHAiOjE0OTIwMDYyMzYsImlhdCI6MTQ5MDc5NjYzNiwiaXNzIjoiR29uY29yZCIsImp0aSI6IjU2NzM2ZWFiLTE1OTQtNDI0YS1iMWNkLWM0M2ZmYTBmNmZhYSIsInBlbSI6e30sInN1YiI6IlVzZXI6NCIsInR5cCI6InRva2VuIn0.G9Qeqrh4pmfghBrqGBRzUIMN7lyUXeOR--LBijBfbdfYmHoforv6i4Vi3U8ZFEYxX2a6q5vFBtJqVp5rSbzsqw
+Cache-Control: no-cache
+```
+
+Вместо ответа возвращается статус 204, что сведетельствует об успешном удаление токена.
+
+---
+
+<a name="change_password"></a>
+## Смена пароля
+
+Ссылка: `api/v0/users/change_password`
+
+Метод: `post`
+
+Формат: `json`
+
+Параметры: 
+  * old_password
+  * new_password
+
+Пример запроса:
+```json
+POST /api/v0/users/change_password HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjQiLCJleHAiOjE0OTIwMDk3NTQsImlhdCI6MTQ5MDgwMDE1NCwiaXNzIjoiR29uY29yZCIsImp0aSI6IjNiMWVmMDBkLTc3ZTctNDY5Yi1hOThkLTE4NmQ5YjljN2VjNCIsInBlbSI6e30sInN1YiI6IlVzZXI6NCIsInR5cCI6InRva2VuIn0.lOb7HsF7zq_Q1VXVoLIQD4H0s2I4cnMmglKJkF0MN80DrnG-yaDX6Cv1MnSoS-bxjyCb7vxG4HuFlLn0NZaz6w
+Content-Type: application/json
+Cache-Control: no-cache
+
+{
+    "old_password": "password",
+    "new_password": "new_password"
+}
+```
+
+Вместо ответа возвращается статус 200, что сведетельствует об успешном удаление токена.
+
+---
+
+<a name="menu"></a>
+## Меню
+
+Ссылка: `api/v0/menu`
+
+Метод: `get`
+
+Пример запроса:
+```json
+GET /api/v0/menu HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjEiLCJleHAiOjE0OTIwMDM3MzMsImlhdCI6MTQ5MDc5NDEzMywiaXNzIjoiR29uY29yZCIsImp0aSI6ImM0YmU0OGIwLTRlMzAtNDQzNC1hYzZlLTk3ODg2YzRiMGU1NSIsInBlbSI6e30sInN1YiI6IlVzZXI6MSIsInR5cCI6InRva2VuIn0._WVYRrKGopTEW-p_F6nQAnA-wygu8vNrVxNisgeekcBlVmrjwqqxAZrScPjGnObENz1-Aj_pBlhSYa8uV6CHzA
+Cache-Control: no-cache
+```
+
+Пример ответа:
+```json
+[
+  {
+    "url": "http://google.com",
+    "name": "admin"
+  }
+]
 ```
