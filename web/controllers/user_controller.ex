@@ -19,8 +19,6 @@ defmodule Goncord.UserController do
   end
 
   def update(conn, user_params) do
-    # TODO: Update resource payloads
-
     user = Guardian.Plug.current_resource(conn)
     resource = conn.assigns[:resource]
 
