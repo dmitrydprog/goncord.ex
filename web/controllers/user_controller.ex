@@ -25,21 +25,15 @@ defmodule Goncord.UserController do
 
     resource = conn.assigns[:resource]
 
-    user =
+    {user, user_params} =
       case resource do
-        nil -> user
+        nil -> {user, user_params}
 
         resource ->
           case resource.is_super do
-            true -> {roles, user_params} = Access.pop(user_params, "roles")
-              roles = Enum.map(roles, &%{name: &1["name"]})
-                      |> Enum.map(&Goncord.Role.get_or_create(&1))
-
-              user = Goncord.Role.set_roles(user, roles)
-            _ -> user
+            true -> user |> extract_roles(user_params) |> extract_apps()
+            _ -> {user, user_params}
           end
-
-        _ -> user
       end
 
     changeset = User.update(user, user_params)
@@ -52,6 +46,24 @@ defmodule Goncord.UserController do
         |> put_status(:unprocessable_entity)
         |> render(Goncord.ChangesetView, "error.json", changeset: changeset)
     end
+  end
+
+  defp extract_apps({user, params}) do
+    {apps, user_params} = Access.pop(params, "apps")
+    Enum.each(apps, fn({k, v}) ->
+      resource = Goncord.Repo.get_by(Goncord.Resource, url: k)
+      Goncord.UserResource.update_payload(user, resource, v)
+    end)
+
+    {user, user_params}
+  end
+
+  defp extract_roles(user, params) do
+    {roles, user_params} = Access.pop(params, "roles")
+    roles = Enum.map(roles, &%{name: &1["name"]})
+            |> Enum.map(&Goncord.Role.get_or_create(&1))
+
+    {Goncord.Role.set_roles(user, roles), user_params}
   end
 
   def change_password(conn, %{"old_password" => old, "new_password" => new}) do
