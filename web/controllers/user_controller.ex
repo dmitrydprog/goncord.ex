@@ -44,28 +44,6 @@ defmodule Goncord.UserController do
       |> put_view(Goncord.TokenView)
       |> render("error.json", message: "Пользователь или ресурс не существуют.")
     end
-
-
-#    case resource do
-#      nil -> {user, user_params}
-#
-#      resource ->
-#        case resource.is_super do
-#          true ->
-#            {user, user_params} = user |> extract_roles(user_params) |> extract_apps()
-#            changeset = User.update(user, user_params)
-#
-#            case Repo.update(changeset) do
-#              {:ok, user} ->
-#                render(conn, "show.json", user: user)
-#              {:error, changeset} ->
-#                conn
-#                |> put_status(:unprocessable_entity)
-#                |> render(Goncord.ChangesetView, "error.json", changeset: changeset)
-#            end
-#          _ -> {user, user_params}
-#        end
-#    end
   end
 
   defp extract_apps({user, params}) do
