@@ -27,13 +27,13 @@
 Формат: `json`
 
 Параметры: 
-  * login 
-  * password 
-  * email 
-  * first_name 
-  * last_name 
-  * second_name 
-  * birthday
+  * `login`
+  * `password`
+  * `email`
+  * `first_name`
+  * `last_name`
+  * `second_name`
+  * `birthday`
 
 Пример запроса:
 ```json
@@ -80,9 +80,9 @@ Cache-Control: no-cache
 Формат: `json`
 
 Параметры: 
-  * login
-  * email
-  * password
+  * `login`
+  * `email`
+  * `password`
 
 Пример запроса:
 ```json
@@ -166,12 +166,12 @@ Cache-Control: no-cache
 Метод: `patch`
 
 Параметры:
-  * second_name
-  * last_name
-  * first_name
-  * birthday
-  * roles (массив)
-  * apps (словарь)
+  * `second_name`
+  * `last_name`
+  * `first_name`
+  * `birthday`
+  * `roles (массив)`
+  * `apps (словарь)`
 
 При обновление массива ролей (`roles`), можно добавлять любые роли. Если роли не были найдены в БД, они будут созданы.
 
@@ -315,8 +315,8 @@ Cache-Control: no-cache
 Формат: `json`
 
 Параметры: 
-  * old_password
-  * new_password
+  * `old_password`
+  * `new_password`
 
 Пример запроса:
 ```json
