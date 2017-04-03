@@ -39,6 +39,7 @@ defmodule Goncord.Router do
       post "/users/change_password", UserController, :change_password
 
       get "/menu", MenuController, :get_menu
+      post "/roles", RoleController, :add_role
     end
   end
 end
