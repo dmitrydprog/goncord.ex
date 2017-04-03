@@ -1,15 +1,17 @@
 # Goncord
 
 ## Оглавление
-* [Правила поиска токена](Правила-поиска-токена)
+* [Правила поиска токена](#find_token)
 * [Регистрация](#register)
 * [Авторизация](#auth)
 * [Выход](#logout)
 * [Валидация](#validate)
 * [Обновление](#update)
+* [Добавление групп](#add_group)
 * [Смена пароля](#change_password)
 * [Меню](#menu)
 
+<a name="find_token"></a>
 ## Правила поиска токена
 Проверяется заголовок `Authorization` запроса:
    * Если заголовок присутствует, то jwt cookie не учитывается.
@@ -285,6 +287,45 @@ Cache-Control: no-cache
 ```
 
 ---
+
+<a name="add_group"></a>
+## Добавление групп
+
+Ссылка: `api/v0/roles`
+
+Метод: `post`
+
+Параметры:
+  * `roles (массив)`
+
+Примеры запроса:
+```json
+POST /api/v0/roles HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjciLCJleHAiOjE0OTIxNzgyMzEsImlhdCI6MTQ5MDk2ODYzMSwiaXNzIjoiR29uY29yZCIsImp0aSI6IjBlZWVkOGIyLTVjMDgtNDRjNi1hZGIxLWQxMzgxYTcwNmZiYiIsInBlbSI6e30sInN1YiI6IlVzZXI6NyIsInR5cCI6InRva2VuIn0.HCnHryDC8aGt4Ajtf2ZWgHjiCHmZQdA3RqLyDCUCXIcNu7ECi15QOVj1vAhgRCadpp5FfzlRpBdTqf2Nb0mblQ
+Content-Type: application/json
+x-app-token: 38181955-c43d-411b-ad85-26cfb1a79a36
+Cache-Control: no-cache
+
+{
+	"roles": ["admin", "student", "teacher"]
+}
+```
+
+Пример ответа:
+```json
+[
+  {
+    "name": "admin"
+  },
+  {
+    "name": "student"
+  },
+  {
+    "name": "teacher"
+  }
+]
+```
 
 <a name="logout"></a>
 ## Выход
