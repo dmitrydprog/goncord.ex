@@ -19,7 +19,7 @@ defmodule Goncord.Mixfile do
   def application do
     [mod: {Goncord, []},
      applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :guardian]]
+                    :phoenix_ecto, :postgrex, :guardian, :guardian_db]]
   end
 
   # Specifies which paths to compile per environment.
@@ -38,9 +38,10 @@ defmodule Goncord.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:cowboy, "~> 1.0"},
-     {:comeonin, "~> 1.0"},
+     {:comeonin, "~> 3.0"},
      {:guardian, ">= 0.0.0"},
-     {:guardian_db, "~> 0.8.0"}]
+     {:guardian_db, "~> 0.8.0"},
+     {:exrm, "~> 0.14.2"}]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
