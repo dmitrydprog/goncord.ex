@@ -24,21 +24,21 @@ defmodule Goncord.Resource do
   end
 
   def generate_uuid() do
-    Ecto.UUID.generate()
+    Ecto.UUID.generate
   end
 
   def create(params) do
-    uuid = generate_uuid()
-    params = Map.put(params, :token, uuid)
+    uuid = generate_uuid
+    params = Map.put params, :token, uuid
 
-    changeset = changeset(%Goncord.Resource{}, params)
-    Goncord.Repo.insert!(changeset)
+    changeset = changeset %Goncord.Resource{}, params
+    Goncord.Repo.insert! changeset
   end
 
   def get_or_create(params) do
     query = from r in Goncord.Resource,
             where: r.url == ^params.url
 
-    Goncord.Repo.one(query) || create(params)
+    Goncord.Repo.one query || create params
   end
 end

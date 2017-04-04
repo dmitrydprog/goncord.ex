@@ -4,8 +4,8 @@ defmodule Mix.Tasks.AddRoles do
   alias Goncord.{Role, Repo}
 
   def run(roles) do
-    ensure_started(Repo, [])
+    ensure_started Repo, []
 
-    Enum.each(roles, &{Role.get_or_create(%{name: &1})})
+    Enum.each roles, &{Role.get_or_create %{name: &1}}
   end
 end

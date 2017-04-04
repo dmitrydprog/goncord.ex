@@ -43,6 +43,8 @@ defmodule Goncord.Router do
       post "/users/change_password", UserController, :change_password
 
       get "/menu", MenuController, :get_menu
+
+      patch "/resource/self_update", ResourceController, :self_update
     end
 
     scope "/v0" do
@@ -52,6 +54,8 @@ defmodule Goncord.Router do
       delete "/roles", RoleController, :delete_role
 
       patch "/users", UserController, :update
+
+      patch "/resource/update", ResourceController, :update
     end
   end
 end

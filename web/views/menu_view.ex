@@ -2,7 +2,7 @@ defmodule Goncord.MenuView do
   use Goncord.Web, :view
 
   def render("menu.json", %{urls: urls}) do
-    render_many(urls, Goncord.MenuView, "url.json")
+    render_many urls, Goncord.MenuView, "url.json"
   end
 
   def render("url.json", %{menu: resource}) do

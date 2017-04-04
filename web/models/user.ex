@@ -45,16 +45,16 @@ defmodule Goncord.User do
   def check_hashed_password(user, password) do
     case user do
       nil -> false
-      _   -> Comeonin.Bcrypt.checkpw(password, user.hashed_password)
+      _   -> Comeonin.Bcrypt.checkpw password, user.hashed_password
     end
   end
 
   def change_password(user, old_password, new_password) do
-    case check_hashed_password(user, old_password) do
+    case check_hashed_password user, old_password do
       true ->
-        changeset = changeset(user, %{password: new_password})
-        changeset = hash_password(changeset)
-        case Goncord.Repo.update(changeset) do
+        changeset = changeset user, %{password: new_password}
+        changeset = hash_password changeset
+        case Goncord.Repo.update changeset do
           {:ok, _} -> true
           _ -> false
         end
@@ -81,7 +81,7 @@ defmodule Goncord.User do
 
     user_resources = Goncord.Repo.all user_resources
     Enum.reduce user_resources, %{}, fn {url, payload}, acc ->
-      Map.put(acc, url, payload)
+      Map.put acc, url, payload
     end
   end
 
@@ -101,7 +101,7 @@ defmodule Goncord.User do
   defp hash_password(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
-        put_change(changeset, :hashed_password, Comeonin.Bcrypt.hashpwsalt(password))
+        put_change changeset, :hashed_password, Comeonin.Bcrypt.hashpwsalt password
       _ -> changeset
     end
   end

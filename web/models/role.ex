@@ -21,15 +21,15 @@ defmodule Goncord.Role do
   end
 
   def create(params) do
-    changeset = changeset(%Role{}, params)
-    Repo.insert!(changeset)
+    changeset = changeset %Role{}, params
+    Repo.insert! changeset
   end
 
   def get_or_create(params) do
     query = from r in Goncord.Role,
         where: r.name == ^params.name
 
-    Repo.one(query) || create(params)
+    Repo.one query || create params
   end
 
   def set_roles(model, roles) do

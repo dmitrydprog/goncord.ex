@@ -2,15 +2,14 @@ defmodule Goncord.MenuController do
   use Goncord.Web, :controller
 
   def get_menu(conn, _parmas) do
-    user = Guardian.Plug.current_resource(conn)
+    user = Guardian.Plug.current_resource conn
 
     urls = user.roles
-    |> Enum.reduce([], fn (role, acc) ->
-      role = role
-      |> Goncord.Repo.preload(:resources)
-
+    |> Enum.reduce([], fn role, acc ->
+      role = role |> Goncord.Repo.preload(:resources)
       acc ++ role.resources
     end)
+    |> Enum.uniq
 
     conn
     |> put_status(:ok)

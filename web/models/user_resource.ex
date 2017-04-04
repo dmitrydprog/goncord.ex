@@ -17,8 +17,8 @@ defmodule Goncord.UserResource do
   end
 
   def create(params) do
-    changeset = changeset(%Goncord.UserResource{}, params)
-    Goncord.Repo.insert!(changeset)
+    changeset = changeset %Goncord.UserResource{}, params
+    Goncord.Repo.insert! changeset
   end
 
   def get_or_create(user, resource, payload) do
@@ -26,18 +26,18 @@ defmodule Goncord.UserResource do
     query = from ur in Goncord.UserResource,
             where: ur.user_id == ^user.id and ur.resource_id == ^resource.id
 
-    Goncord.Repo.one(query) || create(params)
+    Goncord.Repo.one query || create params
   end
 
   def update_payload(user, resource, payload) do
-    user_resource = Goncord.UserResource.get_or_create(user, resource, payload)
+    user_resource = Goncord.UserResource.get_or_create user, resource, payload
 
     case user_resource do
       nil -> nil
 
       user_resource ->
-        changeset = changeset(user_resource, %{payload: payload})
-        Goncord.Repo.update!(changeset)
+        changeset = changeset user_resource, %{payload: payload}
+        Goncord.Repo.update! changeset
     end
   end
 end
