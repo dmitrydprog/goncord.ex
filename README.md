@@ -299,7 +299,7 @@ Cache-Control: no-cache
 Метод: `patch`
 
 Параметры:
-  JSON обьект paload
+  JSON обьект payload
 
 Пример запроса:
 ```json
@@ -344,6 +344,7 @@ Cache-Control: no-cache
 Параметры:
   JSON обьект состоящий из ключей (`url` ресурса) и значения (`payload` ресурса).
   Пример:
+  
     ```json
     {
 	"http://google.com": {
