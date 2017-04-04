@@ -1,14 +1,18 @@
 # Goncord
 
 ## Оглавление
+* [Правила поиска токена](#find_token)
 * [Регистрация](#register)
 * [Авторизация](#auth)
 * [Выход](#logout)
 * [Валидация](#validate)
 * [Обновление](#update)
+* [Добавление групп](#add_group)
+* [Удаление групп](#del_group)
 * [Смена пароля](#change_password)
 * [Меню](#menu)
 
+<a name="find_token"></a>
 ## Правила поиска токена
 Проверяется заголовок `Authorization` запроса:
    * Если заголовок присутствует, то jwt cookie не учитывается.
@@ -26,13 +30,14 @@
 Формат: `json`
 
 Параметры: 
-  * login 
-  * password 
-  * email 
-  * first_name 
-  * last_name 
-  * second_name 
-  * birthday
+  * `login`
+  * `password`
+  * `email`
+  * `first_name`
+  * `last_name`
+  * `second_name`
+  * `birthday`
+  * `roles (массив)` 
 
 Пример запроса:
 ```json
@@ -48,7 +53,11 @@ Cache-Control: no-cache
     "first_name": "Дмитрий",
     "last_name": "Дубина",
     "second_name": "Евгеньевич",
-    "birthday": "1995-03-30"
+    "birthday": "1995-03-30",
+    "roles": [
+	{ "name": "rle1"},
+	{ "name": "rle2"}
+    ]
 }
 ```
 
@@ -56,7 +65,14 @@ Cache-Control: no-cache
 ```json
 {
     "second_name": "Евгеньевич",
-    "roles": [],
+    "roles": [
+        {
+            "name": "rle1"
+        },
+        {
+            "name": "rle2"
+        }
+    ],
     "login": "test",
     "last_name": "Дубина",
     "first_name": "Дмитрий",
@@ -70,7 +86,7 @@ Cache-Control: no-cache
 
 <a name="auth"></a>
 ## Авторизация
-Для логина можно использовать `email` или `login`. Оба поля в раз не обязательны
+Для логина можно использовать `email` или `login`. Оба поля вместе указывать не обязательно.
 
 Ссылка: `api/v0/tokens`
 
@@ -79,9 +95,9 @@ Cache-Control: no-cache
 Формат: `json`
 
 Параметры: 
-  * login
-  * email
-  * password
+  * `login`
+  * `email`
+  * `password`
 
 Пример запроса:
 ```json
@@ -118,7 +134,7 @@ Cache-Control: no-cache
 <a name="validate"></a>
 ## Валидация
 
-Ссылка: `v0/tokens/validate`
+Ссылка: `api/v0/tokens/validate`
 
 Метод: `get`
 
@@ -160,17 +176,15 @@ Cache-Control: no-cache
 1. В запросе должен присутствовать заголовок (`x-app-token`) с токеном приложения.
 2. Приложения должно иметь статус `super`.
 
-Ссылка: api/v0/users
+Ссылка: `api/v0/users`
 
 Метод: `patch`
 
 Параметры:
-  * second_name
-  * last_name
-  * first_name
-  * birthday
-  * roles (массив)
-  * apps (словарь)
+  * `second_name`
+  * `last_name`
+  * `first_name`
+  * `birthday`
 
 При обновление массива ролей (`roles`), можно добавлять любые роли. Если роли не были найдены в БД, они будут созданы.
 
@@ -187,13 +201,7 @@ Cache-Control: no-cache
     "second_name": "Евгеньевич",
     "last_name": "Дубина",
     "first_name": "Дмитрий",
-    "birthday": "1995-03-30",
-    "roles": [
-        "teacher",
-        "admin"
-    ],
-    "apps": {
-    }
+    "birthday": "1995-03-30"
 }
 ```
 
@@ -201,16 +209,13 @@ Cache-Control: no-cache
 ```json
 {
   "second_name": "Евгеньевич",
-  "roles": [
-      "teacher",
-      "admin"
-  ],
+  "roles": [...],
   "login": "test",
   "last_name": "Дубина",
   "first_name": "Дмитрий",
   "email": "test@gmail.com",
   "birthday": "1995-03-30",
-  "apps": {}
+  "apps": {...}
 }
 ```
 
@@ -285,6 +290,73 @@ Cache-Control: no-cache
 
 ---
 
+<a name="add_group"></a>
+## Добавление групп
+
+Ссылка: `api/v0/roles`
+
+Метод: `post`
+
+Параметры:
+  * `roles (массив)`
+
+Примеры запроса:
+```json
+POST /api/v0/roles HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjciLCJleHAiOjE0OTIxNzgyMzEsImlhdCI6MTQ5MDk2ODYzMSwiaXNzIjoiR29uY29yZCIsImp0aSI6IjBlZWVkOGIyLTVjMDgtNDRjNi1hZGIxLWQxMzgxYTcwNmZiYiIsInBlbSI6e30sInN1YiI6IlVzZXI6NyIsInR5cCI6InRva2VuIn0.HCnHryDC8aGt4Ajtf2ZWgHjiCHmZQdA3RqLyDCUCXIcNu7ECi15QOVj1vAhgRCadpp5FfzlRpBdTqf2Nb0mblQ
+Content-Type: application/json
+x-app-token: 38181955-c43d-411b-ad85-26cfb1a79a36
+Cache-Control: no-cache
+
+{
+	"roles": ["admin", "student", "teacher"]
+}
+```
+
+Пример ответа:
+```json
+[
+  {
+    "name": "admin"
+  },
+  {
+    "name": "student"
+  },
+  {
+    "name": "teacher"
+  }
+]
+```
+
+---
+
+<a name="del_group"></a>
+## Удаление групп
+
+Ссылка: `api/v0/roles`
+
+Метод: `delete`
+
+Параметры:
+  * `roles (массив)`
+
+Примеры запроса:
+```json
+POST /api/v0/roles HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjciLCJleHAiOjE0OTIxNzgyMzEsImlhdCI6MTQ5MDk2ODYzMSwiaXNzIjoiR29uY29yZCIsImp0aSI6IjBlZWVkOGIyLTVjMDgtNDRjNi1hZGIxLWQxMzgxYTcwNmZiYiIsInBlbSI6e30sInN1YiI6IlVzZXI6NyIsInR5cCI6InRva2VuIn0.HCnHryDC8aGt4Ajtf2ZWgHjiCHmZQdA3RqLyDCUCXIcNu7ECi15QOVj1vAhgRCadpp5FfzlRpBdTqf2Nb0mblQ
+Content-Type: application/json
+x-app-token: 38181955-c43d-411b-ad85-26cfb1a79a36
+Cache-Control: no-cache
+
+{
+	"roles": ["admin"]
+}
+```
+
+---
+
 <a name="logout"></a>
 ## Выход
 
@@ -300,7 +372,7 @@ Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjQiL
 Cache-Control: no-cache
 ```
 
-Вместо ответа возвращается статус 204, что свидетельствует об успешном удаление токена.
+Вместо ответа возвращается статус 204, что свидетельствует об успешном выходе из аккаунта.
 
 ---
 
@@ -314,8 +386,8 @@ Cache-Control: no-cache
 Формат: `json`
 
 Параметры: 
-  * old_password
-  * new_password
+  * `old_password`
+  * `new_password`
 
 Пример запроса:
 ```json
@@ -331,7 +403,7 @@ Cache-Control: no-cache
 }
 ```
 
-Вместо ответа возвращается статус 200, что свидетельствует об успешном удаление токена.
+Вместо ответа возвращается статус 200, что свидетельствует об успешной смене пароля.
 
 ---
 
