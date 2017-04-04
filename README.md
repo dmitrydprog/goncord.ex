@@ -185,8 +185,6 @@ Cache-Control: no-cache
   * `last_name`
   * `first_name`
   * `birthday`
-  * `roles (массив)`
-  * `apps (словарь)`
 
 При обновление массива ролей (`roles`), можно добавлять любые роли. Если роли не были найдены в БД, они будут созданы.
 
@@ -203,13 +201,7 @@ Cache-Control: no-cache
     "second_name": "Евгеньевич",
     "last_name": "Дубина",
     "first_name": "Дмитрий",
-    "birthday": "1995-03-30",
-    "roles": [
-        "teacher",
-        "admin"
-    ],
-    "apps": {
-    }
+    "birthday": "1995-03-30"
 }
 ```
 
@@ -217,16 +209,13 @@ Cache-Control: no-cache
 ```json
 {
   "second_name": "Евгеньевич",
-  "roles": [
-      "teacher",
-      "admin"
-  ],
+  "roles": [...],
   "login": "test",
   "last_name": "Дубина",
   "first_name": "Дмитрий",
   "email": "test@gmail.com",
   "birthday": "1995-03-30",
-  "apps": {}
+  "apps": {...}
 }
 ```
 
