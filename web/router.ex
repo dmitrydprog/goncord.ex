@@ -21,6 +21,11 @@ defmodule Goncord.Router do
     plug Guardian.Plug.EnsureAuthenticated, handler: Goncord.TokenController
   end
 
+  pipeline :super_resource do
+    plug Guardian.Plug.EnsureAuthenticated, handler: Goncord.TokenController
+    plug Goncord.Plug.IsSuperResource
+  end
+
   scope "/api", Goncord do
     pipe_through(:api)
 
@@ -35,11 +40,18 @@ defmodule Goncord.Router do
       delete "/tokens", TokenController, :delete
       get "/tokens/validate", TokenController, :validate
 
-      patch "/users", UserController, :update
       post "/users/change_password", UserController, :change_password
 
       get "/menu", MenuController, :get_menu
+    end
+
+    scope "/v0" do
+      pipe_through(:super_resource)
+
       post "/roles", RoleController, :add_role
+      delete "/roles", RoleController, :delete_role
+
+      patch "/users", UserController, :update
     end
   end
 end
