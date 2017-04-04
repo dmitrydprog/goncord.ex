@@ -7,7 +7,7 @@
 * [Выход](#logout)
 * [Валидация](#validate)
 * [Обновление](#update)
-* [Обновление pyaloads)(#update_payloads)
+* [Обновление pyaloads](#update_payloads)
 * [Добавление групп](#add_group)
 * [Удаление групп](#del_group)
 * [Смена пароля](#change_password)
