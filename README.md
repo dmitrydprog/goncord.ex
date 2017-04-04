@@ -37,6 +37,7 @@
   * `last_name`
   * `second_name`
   * `birthday`
+  * `roles (массив)` 
 
 Пример запроса:
 ```json
@@ -52,7 +53,11 @@ Cache-Control: no-cache
     "first_name": "Дмитрий",
     "last_name": "Дубина",
     "second_name": "Евгеньевич",
-    "birthday": "1995-03-30"
+    "birthday": "1995-03-30",
+    "roles": [
+	{ "name": "rle1"},
+	{ "name": "rle2"}
+    ]
 }
 ```
 
@@ -60,7 +65,14 @@ Cache-Control: no-cache
 ```json
 {
     "second_name": "Евгеньевич",
-    "roles": [],
+    "roles": [
+        {
+            "name": "rle1"
+        },
+        {
+            "name": "rle2"
+        }
+    ],
     "login": "test",
     "last_name": "Дубина",
     "first_name": "Дмитрий",
