@@ -7,6 +7,7 @@
 * [Выход](#logout)
 * [Валидация](#validate)
 * [Обновление](#update)
+* [Обновление pyaloads](#update_payloads)
 * [Добавление групп](#add_group)
 * [Удаление групп](#del_group)
 * [Смена пароля](#change_password)
@@ -283,6 +284,122 @@ Cache-Control: no-cache
         "foo": "bar",
         "baz": 2017
       }
+    }
+  }
+}
+```
+---
+
+<a name="update_payloads"></a>
+## Обновление payloads
+Запрос на данный url обновляет `payloads` ресурса по токену из заголовка.
+
+Ссылка: `api/v0/resource/self_update`
+
+Метод: `patch`
+
+Параметры:
+  JSON обьект payload
+
+Пример запроса:
+```json
+PATCH /api/v0/resource/self_update HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjIiLCJleHAiOjE0OTI1MjAzMDIsImlhdCI6MTQ5MTMxMDcwMiwiaXNzIjoiR29uY29yZCIsImp0aSI6ImYzYmQyNTExLTU1ZGEtNGM5Mi04YjMzLTRjZTU0OTdjMmVjOSIsInBlbSI6e30sInN1YiI6IlVzZXI6MiIsInR5cCI6InRva2VuIn0.EnnrbEN7JMXl5Vw2smobGrb1o7eHVGa2P1-kT2FcLRgbExR09Mc_DFqjqoSST03M9XScnTW2M2Fp2Pvwwn4rog
+Content-Type: application/json
+x-app-token: 1d702c2f-0ed9-463d-bb9b-7772202eebe0
+Cache-Control: no-cache
+
+{
+	"foo": "bar",
+	"baz": 123
+}
+```
+
+Пример ответа:
+```json
+{
+  "second_name": "Евгеньевич1",
+  "roles": [...],
+  "login": "kylebyaka2",
+  "last_name": "Дубина",
+  "first_name": "Дмитрий",
+  "email": "blablabla@gmail.com",
+  "birthday": "1995-03-30",
+  "apps": {
+    "http://google.com": {
+      "foo": "bar",
+      "baz": 123
+    }
+  }
+}
+```
+
+**Ресурс со статусом `super` имеет возможность обновлять `payloads` чужих ресурсов.**
+
+Ссылка: `api/v0/resource/update`
+
+Метод: `patch`
+
+Параметры:
+  JSON обьект состоящий из ключей (`url` ресурса) и значения (`payload` ресурса).
+  Пример:
+  
+    ```json
+    {
+	"http://google.com": {
+	    "new_foo": "new_bar"
+	},
+	"http://ya.ru": {
+	    "ya-bar": "ya-foo",
+	    "baz": {
+	        "value": 123
+	    }
+        }
+    }
+    ```
+
+Пример запроса:
+```json
+PATCH /api/v0/resource/update HTTP/1.1
+Host: localhost:4000
+Authorization: Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJVc2VyOjIiLCJleHAiOjE0OTI1MjAzMDIsImlhdCI6MTQ5MTMxMDcwMiwiaXNzIjoiR29uY29yZCIsImp0aSI6ImYzYmQyNTExLTU1ZGEtNGM5Mi04YjMzLTRjZTU0OTdjMmVjOSIsInBlbSI6e30sInN1YiI6IlVzZXI6MiIsInR5cCI6InRva2VuIn0.EnnrbEN7JMXl5Vw2smobGrb1o7eHVGa2P1-kT2FcLRgbExR09Mc_DFqjqoSST03M9XScnTW2M2Fp2Pvwwn4rog
+Content-Type: application/json
+x-app-token: 1d702c2f-0ed9-463d-bb9b-7772202eebe0
+Cache-Control: no-cache
+
+{
+	"http://google.com": {
+		"new_foo": "new_bar"
+	},
+	"http://ya.ru": {
+		"ya-bar": "ya-foo",
+		"baz": {
+			"value": 123
+		}
+	}
+}
+```
+
+Пример ответа:
+```json
+{
+  "second_name": "Евгеньевич1",
+  "roles": [...],
+  "login": "kylebyaka2",
+  "last_name": "Дубина",
+  "first_name": "Дмитрий",
+  "email": "blablabla@gmail.com",
+  "birthday": "1995-03-30",
+  "apps": {
+    "http://ya.ru": {
+      "ya-bar": "ya-foo",
+      "baz": {
+        "value": 123
+      }
+    },
+    "http://google.com": {
+      "new_foo": "new_bar"
     }
   }
 }
