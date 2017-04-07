@@ -14,5 +14,5 @@ config :goncord, Goncord.Repo,
   hostname: "postgres",
   pool_size: 10
 
-
-import_config "prod.secret.exs"
+config :goncord, Goncord.Endpoint,
+  secret_key_base: "e4pFIR8dbvOYaRprjJiMIoV8o6LpqUaEw29Y1vjte67e+egF0jQvafvIioOz2MB4"
