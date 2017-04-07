@@ -1,0 +1,31 @@
+variables:
+  NAMESPACE: webapps
+  SOURCE_NAME: goncord
+  REGISTRY_NAME: $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+  DEPLOY_PATH: /webapps/docker-compose.yml
+stages:
+  - build
+  - release
+  - deploy
+  - cleanup
+build:
+  stage: build
+  script:
+    - docker build -t "${NAMESPACE}_${SOURCE_NAME}" .
+release:
+  stage: release
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker tag "${NAMESPACE}_${SOURCE_NAME}" $REGISTRY_NAME
+    - docker push $REGISTRY_NAME
+deploy:
+  stage: deploy
+  script:
+    - docker-compose -f $DEPLOY_PATH stop $SOURCE_NAME
+    - docker-compose -f $DEPLOY_PATH rm -f $SOURCE_NAME
+    - docker-compose -f $DEPLOY_PATH up -d $SOURCE_NAME
+cleanup:
+  stage: cleanup
+  script:
+    - docker container prune -f
+    - docker image prune -af
